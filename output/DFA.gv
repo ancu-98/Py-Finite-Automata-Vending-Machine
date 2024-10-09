@@ -1,0 +1,32 @@
+digraph {
+	fake [style=invisible]
+	E [shape=doublecircle]
+	D
+	G [shape=doublecircle]
+	A [root=true]
+	I
+	C
+	F [shape=doublecircle]
+	H [shape=doublecircle]
+	B
+	fake -> A [style=bold]
+	G -> F [label=a]
+	B -> B [label=b]
+	I -> G [label=b]
+	D -> F [label=a]
+	I -> H [label=a]
+	C -> I [label=a]
+	E -> F [label=a]
+	E -> E [label=b]
+	G -> E [label=b]
+	C -> D [label=b]
+	F -> G [label=b]
+	H -> G [label=b]
+	H -> H [label=a]
+	B -> C [label=a]
+	A -> C [label=a]
+	D -> E [label=b]
+	A -> B [label=b]
+	F -> H [label=a]
+	rankdir=LR
+}
