@@ -5,8 +5,16 @@ from dfa import DFA
 from direct_dfa import DDFA
 from direct_reader import DirectReader
 from time import process_time
+from vending_machine import VendingMachine
+from dfa_vending_machine import vm_dfa
+import pandas as pd
+
 
 '(a|b)*a(a|b)(a|b)+'
+# ((0|1)*)·(0000|0001|0010|0011|0100|0101|0110|0111|1000|1001|1010|1011|1110)
+# ((0|1)*)·(00(00|01|10|11)|01(00|01|10|11)|10(00|01|10|11)|1110)
+
+# ((0|1)*)
 
 program_title = '''
 
@@ -17,16 +25,17 @@ program_title = '''
 
 main_menu = '''
 ¿Qué te gustaría hacer?
-1. Establecer una expresión regular
-2. Probar una cadena con la expresión regular dada
+1. Probar Maquina Expendedora
+2. Establecer una expresión regular
+3. Probar una cadena con la expresión regular dada
 0. Salir del programa
 '''
 
 submenu = '''
 Selecciona una de las opciones anteriores para probar tu expresión regular:
 
-    1. Usar Thompson para generar un AFN y construcción de subconjuntos para generar un AFD.
-    2. Usar el método directo de AFD.
+    1. Usar Thompson para generar un NFA y construcción de subconjuntos para generar un DFA.
+    2. Usar el método directo de DFA.
     0. Volver al menú principal.
 '''
 
@@ -61,6 +70,28 @@ if __name__ == "__main__":
         opt = input('> ')
 
         if opt == '1':
+            # Mostrar ventana vending machine
+            vm = VendingMachine()
+            vm.show_window()
+
+            # Mostrar tabla de transiciones y diagrama
+            transitions = vm_dfa.get_transitions()
+
+            # Convertir las transiciones en una lista de listas (filas)
+            transition_list = [(from_state, symbol, to_state) for from_state, symbol, to_state in transitions]
+
+            # Crear un DataFrame con pandas
+            df = pd.DataFrame(transition_list, columns=['From State', 'Symbol', 'To State'])
+
+            # Mostrar la tabla
+            print(df)
+
+            graph = vm_dfa.trim().to_graphviz()
+            graph.attr(rankdir='LR')
+
+            graph.render('./output/DFA.gv', format='pdf', view=True)
+
+        if opt == '2':
             print(type_regex_msg)
             regex = input('> ')
 
@@ -83,7 +114,7 @@ if __name__ == "__main__":
             except Exception as e:
                 print(f'\n\tERR: {e}')
 
-        if opt == '2':
+        if opt == '3':
             if not regex:
                 print('\n\tERR: You need to set a regular expression first!')
                 opt = None
